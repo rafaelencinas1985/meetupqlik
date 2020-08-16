@@ -1,0 +1,125 @@
+/*
+ * File: c:\Users\rafae\Desktop\MeetUpQlik\trunk\AppMeetUp\00 Global\biblioteca_de_funcoes.qvs
+ * Project: c:\Users\rafae\Desktop\MeetUpQlik\trunk\AppMeetUp\00 Global
+ * Created Date: Sunday, August 16th 2020, 11:03:49 am
+ * Author: Rafael Encinas
+ * -----
+ * Last Modified:
+ * Modified By: Rafael Encinas
+ * -----
+ * Copyright (c) 2020 Discovery Negócios
+ * 
+ * <<licensetext>>
+ * -----
+ * HISTORY:
+ * Date      	By	Comments
+ * ----------	---	----------------------------------------------------------
+ */
+
+Sub ControleDeTempoDeCarga (vETLNum1, vETLNome1, vETLIniBloco1)
+	//------------------------------------------------------------------------
+	// CONTROLE DE TEMPO DE CARGA
+	//------------------------------------------------------------------------
+		Let vETLNum = $(vETLNum1) + 1;
+		Let vETLNome = '$(vETLNome1)';
+		Let vETLIniBloco = Replace( Num(Now()), ',', '.' );
+		Trace ==============================================================;
+		Trace .   $(vETLNome);
+		Trace ==============================================================;
+EndSub ;
+
+Sub ControleDeTempoDeCarga_Gravar
+
+     Concatenate(Duracao_Carga)
+		Load
+			$(vETLNum)								as DC_Reg,
+			'$(vETLNome)'							as DC_Bloco,
+			( Num(Now()) - $(vETLIniBloco) )		as DC_TempoParcial,
+			( Num(Now()) - $(vETLIniGlobal) )		as DC_TempoTotal,
+			'''&$(vTituloDoDocumento)&'''           as DC_NomeDoArquivo
+		AutoGenerate 1;
+    
+		Let vETLTrace1 = Time( ( Num(Now()) - $(vETLIniBloco) ), 'hh:mm:ss' );
+		Let vETLTrace2 = Time( ( Num(Now()) - $(vETLIniGlobal) ), 'hh:mm:ss' );
+        Trace $(vETLNome) - Parcial: $(vETLTrace1) - Total: $(vETLTrace2);
+        
+EndSub;
+
+Sub ControleDeTempoDeCarga_Carregar
+
+   Trace ==============================================================;
+
+	For x = 1 to NoOfRows('Duracao_Carga')
+
+		Let vReg = Peek( 'DC_Reg', $(x)-1, 'Duracao_Carga' );
+		Let vBloco = Peek( 'DC_Bloco', $(x)-1, 'Duracao_Carga' );
+		Let vTempoParcial = Time( Peek( 'DC_TempoParcial', $(x)-1, 'Duracao_Carga' ), 'hh:mm:ss' );
+		Let vTempoTotal = Time( Peek( 'DC_TempoTotal', $(x)-1, 'Duracao_Carga' ), 'hh:mm:ss' );
+
+		Trace $(vReg). $(vBloco) - Parcial: $(vTempoParcial) - Total: $(vTempoTotal);
+		
+	Next x;
+
+	Let x = ;
+	Let vReg = ;
+	Let vBloco = ;
+	Let vTempoParcial = ;
+	Let vTempoTotal = ;
+
+EndSub;
+    
+/*
+  SUB Para Gravar em Disco e Limpar a Memória
+*/
+Sub GravaLimpaMemoria ( vNomeTabela , vCaminhoTabela) 
+    
+    STORE $(vNomeTabela) INTO $(vCaminhoTabela) (qvd);
+    DROP TABLE $(vNomeTabela);
+
+EndSub;
+
+/*
+  SUB Para Extrair Genericamente Tabelas Simples
+*/
+Sub Extracao (vNomeGenerico, vTabela , vCaminho, vKeys, vWhere)
+
+    Trace  $(vNomeGenerico) - $(vTabela)  - $(vCaminho) - $(vKeys);
+	TEMP: SELECT * FROM $(vTabela)   $(vWhere);
+    Call GravaLimpaMemoria('TEMP' , '$(vCaminho)'); 
+    
+EndSub;
+
+Sub Connectar_Deltacon
+  	LIB CONNECT TO 'ODBC_VETORH';
+EndSub ;
+
+Sub Desconectar
+     Disconnect ;
+EndSub;
+
+
+sub DoDir (Root)
+   for each Ext in 'qvw', 'qva', 'qvo', 'qvs', 'qvc', 'qvf', 'qvd'
+
+      for each File in filelist (Root&'\*.' &Ext)
+         Dados:
+         LOAD 
+            '$(File)' as Name, 
+            Round(FileSize( '$(File)' )/1024/1024,2) as SizeMB, 
+            FileTime( '$(File)' ) as FileTime
+         autogenerate 1;
+
+      next File
+
+   next Ext
+   for each Dir in dirlist (Root&'\*' )
+
+      call DoDir (Dir)
+
+   next Dir
+
+Endsub;
+
+
+
+

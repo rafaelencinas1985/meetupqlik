@@ -1,0 +1,25 @@
+/*
+ * File: c:\Users\rafae\Desktop\MeetUpQlik\trunk\AppMeetUp\Main.qvs
+ * Project: c:\Users\rafae\Desktop\MeetUpQlik\trunk\AppMeetUp
+ * Created Date: Sunday, August 16th 2020, 11:01:58 am
+ * Author: Rafael Encinas
+ * -----
+ * Last Modified:
+ * Modified By: Rafael Encinas
+ * -----
+ * Copyright (c) 2020 Discovery Negócios
+ * 
+ * <<licensetext>>
+ * -----
+ * HISTORY:
+ * Date      	By	Comments
+ * ----------	---	----------------------------------------------------------
+ */
+
+$(Must_Include=[lib://SourceCode/trunk/AppMeetUp/00_Vendas.qvs]); 
+
+Let minhaVariavel = 0 ;
+
+
+
+

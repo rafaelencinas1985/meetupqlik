@@ -1,0 +1,143 @@
+/*
+ * File: c:\Users\rafae\Desktop\MeetUpQlik\trunk\AppMeetUp\00 Global\variaveis_globais.qvs
+ * Project: c:\Users\rafae\Desktop\MeetUpQlik\trunk\AppMeetUp\00 Global
+ * Created Date: Sunday, August 16th 2020, 11:02:46 am
+ * Author: Rafael Encinas
+ * -----
+ * Last Modified:
+ * Modified By: Rafael Encinas
+ * -----
+ * Copyright (c) 2020 Discovery Negócios
+ * 
+ * <<licensetext>>
+ * -----
+ * HISTORY:
+ * Date      	By	Comments
+ * ----------	---	----------------------------------------------------------
+ */
+
+SET ThousandSep='.';
+SET DecimalSep=',';
+SET MoneyThousandSep='.';
+SET MoneyDecimalSep=',';
+SET MoneyFormat='R$ #.##0,00;-R$ #.##0,00';
+SET TimeFormat='hh:mm:ss';
+SET DateFormat='DD/MM/YYYY';
+SET TimestampFormat='DD/MM/YYYY hh:mm:ss[.fff]';
+SET MonthNames='jan;fev;mar;abr;mai;jun;jul;ago;set;out;nov;dez';
+SET DayNames='seg;ter;qua;qui;sex;sáb;dom';
+SET LongMonthNames='janeiro;fevereiro;março;abril;maio;junho;julho;agosto;setembro;outubro;novembro;dezembro';
+SET LongDayNames='segunda-feira;terça-feira;quarta-feira;quinta-feira;sexta-feira;sábado;domingo';
+SET FirstWeekDay=6;
+SET BrokenWeeks=1;
+SET ReferenceDay=0;
+SET FirstMonthOfYear=1;
+SET CollationLocale='pt-BR';
+
+/*
+//EXEMPLO COMO CAPTURAR O DIRETORIO
+
+Set CaminhoLib = 'lib://CDA_CodigosFonte/Apps/Contas_a_Pagar_old';
+$(Must_Include=[$(CaminhoLib)/Main.qvs]); 
+
+*/
+
+$(Must_Include=[lib://SourceCode/00 Global/biblioteca_de_funcoes.qvs]); 
+
+trace ======================================;
+trace                 VARIAVEIS GLOBAIS     ;
+trace ======================================;
+
+Let vNomeDoApp = DocumentName();
+
+//-----Datas Cargas
+let vAnosExtracaoVendas           = 1; // Anos considerados na extração
+//let vDataInicialExtracaoVendas  = num(year(today()) - $(vAnosExtracaoVendas),'0000' ) & '-' &  num(month(today()),'00' ) & '-' & '01';
+let vDataInicialExtracaoVendas    = date(today()-2,'YYYY-MM-DD');
+let vDataFinalExtracaoVendas      = date(today(),'YYYY-MM-DD');
+
+
+// Compras
+let vAnosCargaTotalCompras = 2; // Anos considerados na extração
+let vFlagTotalIncrementalCompras = 'I' ; // Tipo de carga 
+
+if vFlagTotalIncrementalCompras = 'T' then
+   let vDataInicialExtracaoCompras  = num(year(today()) - $(vAnosCargaTotalCompras),'0000' ) & '-' &  num(month(today()),'00' ) & '-' & '01';
+end if
+
+if vFlagTotalIncrementalCompras = 'I' then
+  let vDataInicialExtracaoCompras = num(year(today()-3),'0000') & '-' & num(month(today()-3),'00' ) & '-' & num(day(today()-3),'00');
+end if
+   
+let vDataFinalExtracaoCompras = num(year(today()),'0000') & '-' & num(month(today()),'00' ) & '-' & num(day(today()),'00');
+
+SET vCorFonteVermelho = RGB(217,58,54);
+SET vCorFonteAmarelo  = RGB(255,187,4);
+SET vCorFonteVerde    = RGB(130,183,50);		// #82B732
+SET vCorFonteAzul     = RGB(0,121,192);
+
+
+SET vCorFundoVermelho = RGB(245,198,203);		// #F5C6CB			Antigo: RGB(251,223,214)
+SET vCorFundoAmarelo  = RGB(255,238,186);		// #FFEEBA			Antigo:	RGB(252,241,214)
+SET vCorFundoVerde    = RGB(195,230,203);		// #C3E6CB			Antigo: RGB(221,234,203)
+SET vCorFundoAzul     = RGB(190,229,235);		// #BEE5EB			Antigo: RGB(191,221,239)
+SET vCorFundoCinza    = RGB(239,239,239);
+
+
+SET vCorFonteVendaLiquida = RGB(94,198,93);			// #5EC65D
+SET vCorFundoVendaLiquida = RGB(239,249,238);
+
+SET vCorFonteVenda        = RGB(85,192,224);		// #55C0E0
+
+SET vCorFonteDevolucao    = RGB(251,149,0);			// #FB9500
+SET vCorFundoDevolucao    = RGB(255,244,229);		// #FFF4E5
+
+SET vCorFontePremiacoes = RGB(1,139,144);
+SET vCorFundoPremiacoes = RGB(169,221,225);   
+
+Let vETLNum = 0;
+
+Let vTituloDoDocumento = DocumentTitle();
+
+
+/*
+
+Existem tabelas que estão interligadas por ID e outras por Objeto
+- Provavelmente esta troca de ID's é devido a ordem de relatórios
+
+*/
+
+MAP_CORRIGE_LOJA:
+	MAPPING
+	LOAD * INLINE [
+		From, 	To
+		1, 		2
+		2,		3
+		3, 		4
+		4, 		5
+		99, 	1
+	];
+
+
+/*
+   TABELA DE CONTROLE DE HORAS E DATAS DE CARGAS
+ 
+*/
+  Duracao_Carga:
+    Load
+        Num(Null())                     as DC_Reg,
+        Text(Null())                    as DC_Bloco,
+        Time( Null(), 'hh:mm:ss' )      as DC_TempoParcial,
+        Time( Null(), 'hh:mm:ss' )      as DC_TempoTotal,
+        Text(Null())                    as DC_NomeDoArquivo
+    AutoGenerate 0;
+
+    Let vETLIniGlobal = Replace( Num(Now()), ',', '.' );
+    Let vETLNum = 0;
+
+
+
+
+
+
+
