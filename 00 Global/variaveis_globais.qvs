@@ -42,7 +42,7 @@ $(Must_Include=[$(CaminhoLib)/Main.qvs]);
 
 */
 
-$(Must_Include=[lib://SourceCode/00 Global/biblioteca_de_funcoes.qvs]); 
+$(Must_Include=[$(vCaminho)/00 Global/biblioteca_de_funcoes.qvs]); 
 
 trace ======================================;
 trace                 VARIAVEIS GLOBAIS     ;
