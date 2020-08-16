@@ -16,6 +16,12 @@
  * ----------	---	----------------------------------------------------------
  */
 
+ Sub ValidaCampoos ( vTeste)
+   trace ==========================;
+   trace $(vTeste);
+   trace ==========================;
+ EndSub;
+
 Sub ControleDeTempoDeCarga (vETLNum1, vETLNome1, vETLIniBloco1)
 	//------------------------------------------------------------------------
 	// CONTROLE DE TEMPO DE CARGA
