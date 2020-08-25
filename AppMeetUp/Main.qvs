@@ -1,4 +1,4 @@
-/*
+﻿/*
  * File: c:\Users\rafae\Desktop\MeetUpQlik\trunk\AppMeetUp\Main.qvs
  * Project: c:\Users\rafae\Desktop\MeetUpQlik\trunk\AppMeetUp
  * Created Date: Sunday, August 16th 2020, 11:01:58 am
@@ -21,6 +21,8 @@ $(Must_Include=[$(vCaminho)/00 Global/variaveis_globais.qvs]);
 $(Must_Include=[$(vCaminho)/AppMeetUp/00_Vendas.qvs]); 
 
 Let minhaVariavel = 0 ;
+
+Let variavel = 'Rafael Encinas' ; 
 
 
 
