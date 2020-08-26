@@ -20,6 +20,7 @@ $(Must_Include=[lib://SourceCode/trunk/AppMeetUp/00_Vendas.qvs]);
 
 Let minhaVariavel = 0 ;
 Let MinhaVar = 'Rafael';
+let variavel = 'Encinas';
 
 
 
