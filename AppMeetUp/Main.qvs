@@ -22,7 +22,7 @@ $(Must_Include=[$(vCaminho)/AppMeetUp/00_Vendas.qvs]);
 
 Let minhaVariavel = 0 ;
 
-Let variavel = 'Rafael Encinas' ; 
+Let variavel2 = 'Rafael Encinas' ; 
 
 
 
